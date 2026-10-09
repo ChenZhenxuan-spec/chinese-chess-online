@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#24170f">
+  <title>揭棋 · 双人在线对战</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">双人在线 · 服务器裁判</p>
+        <h1>揭棋</h1>
+      </div>
+      <div id="connectionBadge" class="connection offline"><span></span>连接中</div>
+    </header>
+
+    <section id="lobby" class="lobby paper-card">
+      <div class="lobby-copy">
+        <p class="seal">暗</p>
+        <h2>落子方知真身</h2>
+        <p>三十枚棋子混洗入局。暗子按原位走法，第一次移动后公开身份。</p>
+      </div>
+      <div class="lobby-form">
+        <label>你的昵称<input id="playerName" maxlength="16" autocomplete="nickname" placeholder="例如：棋手一"></label>
+        <button id="createBtn" class="primary">创建房间</button>
+        <div class="divider"><span>或凭房间号加入</span></div>
+        <div class="join-row">
+          <input id="roomInput" maxlength="6" inputmode="numeric" placeholder="6 位房间号" aria-label="房间号">
+          <button id="joinBtn">加入房间</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="game" class="game hidden">
+      <div class="game-top paper-card">
+        <div>
+          <span class="label">房间号</span>
+          <button id="copyRoom" class="room-code" title="点击复制">------</button>
+        </div>
+        <div id="turnText" class="turn-text">等待玩家加入</div>
+        <button id="leaveBtn" class="ghost">返回大厅</button>
+      </div>
+
+      <div class="arena">
+        <aside class="player-panel paper-card">
+          <div id="blackPlayer" class="player black"><span class="side-dot"></span><div><small>黑方</small><strong>等待加入</strong></div><i></i></div>
+          <div class="versus">对</div>
+          <div id="redPlayer" class="player red"><span class="side-dot"></span><div><small>红方</small><strong>等待加入</strong></div><i></i></div>
+          <div class="identity">你执 <b id="mySide">—</b></div>
+        </aside>
+
+        <div class="board-wrap">
+          <canvas id="board" width="620" height="680" aria-label="中国象棋棋盘"></canvas>
+          <div id="waitingOverlay" class="waiting-overlay">等待另一位棋手加入…</div>
+        </div>
+
+        <aside class="captured-panel paper-card">
+          <h3>折戟录</h3>
+          <p>被吃暗子在此公开真身</p>
+          <h4 class="red-title">红方被吃 <span id="redCount">0</span></h4>
+          <div id="redCaptured" class="captured-grid"></div>
+          <h4>黑方被吃 <span id="blackCount">0</span></h4>
+          <div id="blackCaptured" class="captured-grid"></div>
+        </aside>
+      </div>
+
+      <div class="controls paper-card">
+        <p id="statusText">正在连接服务器…</p>
+        <div>
+          <button id="undoBtn">请求悔棋</button>
+          <button id="restartBtn">重新开局</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="proposal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card paper-card">
+      <p class="seal small">议</p>
+      <h2 id="proposalTitle">对方请求悔棋</h2>
+      <p id="proposalText">是否同意？</p>
+      <div><button id="rejectBtn">拒绝</button><button id="acceptBtn" class="primary">同意</button></div>
+    </div>
+  </div>
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" crossorigin="anonymous"></script>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
